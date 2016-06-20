@@ -1,25 +1,68 @@
+*{
+	/*margin: 0; */
+    box-sizing: border-box;
+	font-family: 'Josefin Sans', sans-serif;
+
+}
+
+body{
+	background-image: url(https://s19.postimg.org/bo64n1aab/i_Stock_80377159_XLARGE.jpg);
+	background-size: cover;
+  	
+}
+
+#nav-buttons{
+	display: flex;
+	width: 100%;
+}
+
+.buttons {
+	flex: 1;
+	background: transparent;
+    padding: 1% 2%;
+    color: #fd914f;
+    min-height: 30px;
+    font-size: 20px;
+    border: none;
+}
 
 #container{
 	width: 100%;
-	/*display: flex;
+	display: flex;
 	flex-direction: row;
-	flex-wrap: wrap; */
-	font-family: 'Londrina Sketch', cursive;
-	font-size: 20px;
+	flex-wrap: wrap; 
+	justify-content: space-around;
+	align-content: center;
 }
 
 
 #currentContainer{
+color: #ffffff;
+text-align: right;
 font-family: 'Londrina Sketch', cursive;
-font-size: 20px;
+font-size: 100px;
+margin-left: 60%;
 }
+
+
 
 #hourlyContainer{
-	font-family: 'Raleway', sans-serif;
-	font-size: 20px;
+	color: white;
+	flex: 1;
+	margin-top: 4%;
+	padding-top: 2%;
+	padding-right: 8.5%;
+	padding-left: 8%; 
+	border: 1px solid #ffffff;
+	font-size: large;
 }
 
+
 #dailyContainer{
-	font-family: 'Poiret One', cursive;
-	font-size: 20px;
-}
+	color: white;
+	flex: 1;
+	margin-top: 4%;
+	padding: 2% 3%;
+	border: 1px solid #ffffff;
+	font-size: large;
+} 

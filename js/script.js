@@ -29,6 +29,43 @@ var container = document.querySelector('#container'),
 	hourlyButton = document.querySelector('#hourly'),
 	currentButton = document.querySelector('#current'),
 	dailyButton = document.querySelector('#daily')
+	//currentView = document.querySelector('#currentContainer')
+	//hourlyView = document.querySelector('#hourlyContainer')
+	//dailyView = document.querySelector('#dailyContainer')
+
+
+//Time Conversion Function
+var timeConversion = function(inputMilsec){    
+   	 	var date = new Date(inputMilsec * 1000)
+    	var h = date.getHours() % 12
+    	var m = date.getMinutes()
+    	var amPm = ''
+    
+    	if(m < 10){
+        	m = '0' + m
+    	} 
+
+    	if (h === 0) {
+            h = 12
+        } 
+
+        if (h >= 12) {
+            amPm = "PM"
+        } else {
+            amPm = "AM"
+        }
+    
+    	return h + ':' + m + ' ' + amPm 
+}
+
+/*var time = function() {
+	todaysDate = new Date ()
+	currentTime = timeConversion(todaysDate)
+	console.log(currentTime)
+	container.innerHTML += currentTime
+}
+
+setInterval(time, 1000) */
 
 
 //Create Handler Functions 
@@ -39,30 +76,32 @@ var renderCurrentView = function(apiWResponse){
 		currentTime = apiWResponse.currently.time
 
 	var htmlString = ''
-		htmlString += '<h1>' + Math.floor(curentTemp) + '</h1>'
-		htmlString += '<h2>' + currentTime + '</h2>'
-		htmlString += '<h2>' + currentSummary + '</h2>'
+		htmlString += '<div id="currentContainer">'
+		htmlString += '<h1>' + Math.floor(curentTemp) + '&deg' + 'F' + '</h1>'
+		//htmlString += '<h2>' + timeConversion(currentTime) + '</h2>'
+		//htmlString += '<h2>' + currentSummary + '</h2>'
+		htmlString += '</div>'
 	
 	container.innerHTML = htmlString
 }
 
 var renderHourlyView = function(apiWResponse){	
 	var hourlyArray = apiWResponse.hourly.data
-
+	var htmlHourlyString = ''
 	// Create Loop for Hourly Array
 	for (var i = 0; i < 12; i++) {
 			var hourlyObject = hourlyArray[i],
 				hourlyTime = hourlyObject.time,
 				hourlySummary = hourlyObject.summary,
 				hourlyTemp = hourlyObject.temperature,
-				hourlyHumidity = hourlyObject.humidity
+				hourlyRainChance = hourlyObject.precipProbability * 100
 
-		var htmlHourlyString = ''
-		htmlHourlyString += '<div>'
-		htmlHourlyString += '<h1>' + Math.floor(hourlyTemp) + '</h1>'
-		htmlHourlyString += '<p>' + hourlyTime + '</p>'
+		
+		htmlHourlyString += '<div id="hourlyContainer">'
+		htmlHourlyString += '<h2>' + timeConversion(hourlyTime) + '</h2>'
+		htmlHourlyString += '<p>' + Math.floor(hourlyTemp) + '&deg' + 'F' + '</p>'
 		htmlHourlyString += '<p>' + hourlySummary + '</p>'
-		htmlHourlyString += '<p>' + hourlyHumidity + '</p>'
+		htmlHourlyString += '<p> Rain Chance: ' + Math.floor(hourlyRainChance) + '%' + '</p>'
 		htmlHourlyString += '</div>'
 
 	}
@@ -71,24 +110,48 @@ var renderHourlyView = function(apiWResponse){
 }
 
 
+
+
 var renderDailyView = function(apiWResponse){
 	var dailyArray = apiWResponse.daily.data
 	console.log(apiWResponse)
+	var htmlDailyString = ''
+	/*var daysOfWeekObject = {
+		0: "Sunday",
+		1: "Monday",
+		2: "Tuesday", 
+		3: "Wednesday", 
+		4: "Thursday",
+		5: "Friday", 
+		6: "Saturday"
+	} */
+
+	
 	// Create Loop for Hourly Array
 	for (var i = 0; i < 7; i++) {
+		//for (var key in daysOfWeekObject){
+		//if(i === daysOfWeekObject.key){
+		//		i = daysOfWeekObject[key]
+		//	}
+		//	return i
+		//console.log(daysOfWeekObject[key])
+
+		console.log(i)
 			var dailyObject = dailyArray[i],
 				dailyTime = dailyObject.time,
 				dailySummary = dailyObject.summary,
 				dailyTemp = dailyObject.temperatureMax,
-				dailyHumidity = dailyObject.humidity
-				console.log(dailyTemp)
+				dailyRainChance = dailyObject.precipProbability * 100
 
-		var htmlDailyString = ''
-		htmlDailyString += '<h1>' + Math.floor(dailyTemp) + '</h1>'
-		htmlDailyString += '<p>' + dailyTime + '</p>'
-		htmlDailyString += '<p>' + dailySummary + '</p>'
-		htmlDailyString += '<p>' + dailyHumidity + '</p>'
-
+			
+			htmlDailyString += '<div id="dailyContainer">'
+			htmlDailyString += '<h1>' + i + '</h1>'
+			htmlDailyString += '<h3>' + Math.floor(dailyTemp) + '&deg' + 'F' + '</h3>'
+			//htmlDailyString += '<p>' + timeConversion(dailyTime) + '</p>'
+			htmlDailyString += '<p>' + dailySummary + '</p>'
+			htmlDailyString += '<p> Rain Chance: ' + Math.floor(dailyRainChance) + '%' + '</p>'
+			htmlDailyString += '</div>'
+			
 	}
 	container.innerHTML = htmlDailyString
 }
@@ -149,12 +212,11 @@ var controller = function(){
 	else if(currentViewType === 'daily'){
 		weatherPromise.then(renderDailyView)
 	}	
-	
+
 }
 
 
-
-
+location.hash = hashObjectData().lat + '/' + hashObjectData().lng + '/'+ 'current'
 controller()
 
 //Create any Event Listeners
