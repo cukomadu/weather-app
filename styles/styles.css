@@ -1,0 +1,25 @@
+
+#container{
+	width: 100%;
+	/*display: flex;
+	flex-direction: row;
+	flex-wrap: wrap; */
+	font-family: 'Londrina Sketch', cursive;
+	font-size: 20px;
+}
+
+
+#currentContainer{
+font-family: 'Londrina Sketch', cursive;
+font-size: 20px;
+}
+
+#hourlyContainer{
+	font-family: 'Raleway', sans-serif;
+	font-size: 20px;
+}
+
+#dailyContainer{
+	font-family: 'Poiret One', cursive;
+	font-size: 20px;
+}
