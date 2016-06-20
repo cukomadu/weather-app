@@ -13,6 +13,7 @@ var baseURL = 'https://api.forecast.io/forecast/' + apiKey
 
 // Handle Default Route
 var geoLocationFinder = function(positionObject){
+	console.log('coords', positionObject)
 	var latitude = positionObject.coords.latitude
 	var	longitude = positionObject.coords.longitude
 		location.hash = latitude + '/' + longitude + '/current'
@@ -116,26 +117,9 @@ var renderDailyView = function(apiWResponse){
 	var dailyArray = apiWResponse.daily.data
 	console.log(apiWResponse)
 	var htmlDailyString = ''
-	/*var daysOfWeekObject = {
-		0: "Sunday",
-		1: "Monday",
-		2: "Tuesday", 
-		3: "Wednesday", 
-		4: "Thursday",
-		5: "Friday", 
-		6: "Saturday"
-	} */
 
-	
 	// Create Loop for Hourly Array
 	for (var i = 0; i < 7; i++) {
-		//for (var key in daysOfWeekObject){
-		//if(i === daysOfWeekObject.key){
-		//		i = daysOfWeekObject[key]
-		//	}
-		//	return i
-		//console.log(daysOfWeekObject[key])
-
 		console.log(i)
 			var dailyObject = dailyArray[i],
 				dailyTime = dailyObject.time,
@@ -171,7 +155,7 @@ var hashObjectData = function(){
 
 function fetchData(inputlat, inputlng) {
     
- 	var fullUrl = baseURL + '/' + inputlat + ',' + inputlng
+ 	var fullUrl = baseURL + '/' + inputlat + ',' + inputlng + '?callback=?'
    
     //Inital API Call
 	var geoPromise = $.getJSON(fullUrl)
@@ -193,30 +177,33 @@ var controller = function(){
 	// full url = https: //api.forecast.io/forecast/0bf718b5981b6235215b4883a6243442/LATITUDE,LONGITUDE
 	var currentViewType = hashObjectData().viewType
 
-	var weatherPromise = fetchData(hashObjectData().lat, hashObjectData().lng)
+	// var weatherPromise = fetchData( hashObjectData().lat, hashObjectData().lng )
 	
 	if (!location.hash) {
+		console.log('fetching coords??')
         navigator.geolocation.getCurrentPosition(geoLocationFinder, errorHandler)
+        // fetchData(hashObjectData().lat, hashObjectData().lng)
+
         return
     }
 
 	//Condtion for Hash Routing
 	if(currentViewType === 'current'){
-		weatherPromise.then(renderCurrentView)	
+		fetchData(hashObjectData().lat, hashObjectData().lng).then(renderCurrentView)	
 	} 
 		
 	else if(currentViewType === 'hourly'){
-		weatherPromise.then(renderHourlyView)
+		fetchData(hashObjectData().lat, hashObjectData().lng).then(renderHourlyView)
 	}
 	
 	else if(currentViewType === 'daily'){
-		weatherPromise.then(renderDailyView)
+		fetchData(hashObjectData().lat, hashObjectData().lng).then(renderDailyView)
 	}	
 
 }
 
 
-location.hash = hashObjectData().lat + '/' + hashObjectData().lng + '/'+ 'current'
+// location.hash = hashObjectData().lat + '/' + hashObjectData().lng + '/'+ 'current'
 controller()
 
 //Create any Event Listeners
