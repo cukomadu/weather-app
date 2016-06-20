@@ -110,6 +110,15 @@ var renderHourlyView = function(apiWResponse){
 
 }
 
+var daysOfWeek =[
+	"Sun",
+	"Monday",
+	"Tuesday",
+	"Wed",
+	"Thur",
+	"Fri",
+	"Sat",
+]
 
 
 
@@ -126,10 +135,16 @@ var renderDailyView = function(apiWResponse){
 				dailySummary = dailyObject.summary,
 				dailyTemp = dailyObject.temperatureMax,
 				dailyRainChance = dailyObject.precipProbability * 100
+ 
+			// convert .time property to js date object
+			var dateObject = new Date(dailyTime * 1000)
+			// get day-integer
+			var dayOfWeekInt = dateObject.getDay()
+
 
 			
 			htmlDailyString += '<div id="dailyContainer">'
-			htmlDailyString += '<h1>' + i + '</h1>'
+			htmlDailyString += '<h1>' + daysOfWeek[dayOfWeekInt] + '</h1>'
 			htmlDailyString += '<h3>' + Math.floor(dailyTemp) + '&deg' + 'F' + '</h3>'
 			//htmlDailyString += '<p>' + timeConversion(dailyTime) + '</p>'
 			htmlDailyString += '<p>' + dailySummary + '</p>'
